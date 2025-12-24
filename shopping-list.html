@@ -226,13 +226,13 @@
         // Supabase 설정
         const SUPABASE_URL = 'https://nlukmcoyxtkjbpgponbl.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sdWttY295eHRramJwZ3BvbmJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1MjE2NTcsImV4cCI6MjA4MjA5NzY1N30.eTzKowNJ9E690rsGHEjJobQSqmCPpyray7QzKnrXHFA';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let items = [];
 
         // Supabase에서 데이터 로드
         async function loadItems() {
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('shopping_items')
                 .select('*')
                 .order('created_at', { ascending: true });
@@ -275,7 +275,7 @@
             const text = input.value.trim();
 
             if (text) {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('shopping_items')
                     .insert([{ text, checked: false }])
                     .select();
@@ -293,7 +293,7 @@
         }
 
         async function deleteItem(id) {
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('shopping_items')
                 .delete()
                 .eq('id', id);
@@ -312,7 +312,7 @@
             if (!item) return;
 
             const newChecked = !item.checked;
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('shopping_items')
                 .update({ checked: newChecked })
                 .eq('id', id);
@@ -331,7 +331,7 @@
 
             if (completedIds.length === 0) return;
 
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('shopping_items')
                 .delete()
                 .in('id', completedIds);
